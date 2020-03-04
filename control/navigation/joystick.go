@@ -43,17 +43,17 @@ func (joystick Joystick) GetCommands() (CommandsRepository, error) {
 
 	cmdRepo := NewCommandsRepository(3)
 	if State.Buttons == 1 { // If the A button is pressed
+		cmdRepo[1] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
+		cmdRepo[0] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
+		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
+	} else if State.Buttons == 2 { // If the B button is pressed
 		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
 		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
-	} else if State.Buttons == 2 { // If the B button is pressed
-		cmdRepo[0] = StandardCommand{RobotID: 2, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
-		cmdRepo[1] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
-		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
 	} else if State.Buttons == 4 { // If the X button is pressed
-		cmdRepo[0] = StandardCommand{RobotID: 3, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
-		cmdRepo[1] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
-		cmdRepo[2] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
+		cmdRepo[2] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
+		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
+		cmdRepo[0] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
 	} else {
 		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
