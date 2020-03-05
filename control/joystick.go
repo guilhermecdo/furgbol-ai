@@ -12,12 +12,12 @@ type Joystick struct {
 
 // NewJoystick creates a joystick instance
 func NewJoystick(id int) *Joystick {
-	return &CommandsRepository{joystickID: id}
+	return &Joystick{joystickID: id}
 }
 
 // Init initiates the joystick working
-func (joystick Joystick) Init() error {
-	joystick.js, err := joy.Open(joystick.joystickID)
+func (joystick *Joystick) Init() (err error) {
+	joystick.js, err = joy.Open(joystick.joystickID)
 	return err
 }
 
@@ -28,33 +28,30 @@ func (joystick Joystick) GetCommands() (CommandsRepository, error) {
 		return nil, err
 	}
 
-	linearVelocity, angularVelocity float64
-	if State.AxisData[0] > -8192 && State.AxisData[0] < 8192 {
+	angularVelocity := float64(State.AxisData[0] / 256)
+	if angularVelocity > -32 && angularVelocity < 32 {
 		angularVelocity = 0
-	} else {
-		angularVelocity = float64(State.AxisData[0] / 256)
 	}
 
-	if State.AxisData[1] > -8192 && State.AxisData[1] < 8192 {
+	linearVelocity := float64(State.AxisData[0] / 256)
+	if linearVelocity > -32 && linearVelocity < 32 {
 		linearVelocity = 0
-	} else {
-		linearVelocity = float64(State.AxisData[0] / 256)
 	}
 
 	cmdRepo := NewCommandsRepository(3)
-	if State.Buttons == 1 { // If the A button is pressed
-		cmdRepo[1] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
-		cmdRepo[0] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
+	if State.Buttons == 1 { // If the A button is pressed, the green robot have to be controlled
+		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
+		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
 		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
-	} else if State.Buttons == 2 { // If the B button is pressed
+	} else if State.Buttons == 2 { // If the B button is pressed, the red robot have to be controlled
 		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
 		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
-	} else if State.Buttons == 4 { // If the X button is pressed
-		cmdRepo[2] = StandardCommand{RobotID: 1, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
+	} else if State.Buttons == 4 { // If the X button is pressed, the magenta robot have to be controlled
+		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
-		cmdRepo[0] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
-	} else {
+		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: linearVelocity, AngularVelocity: angularVelocity}
+	} else { // If none activation button is pressed, none robot have to be controlled
 		cmdRepo[0] = StandardCommand{RobotID: 1, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[1] = StandardCommand{RobotID: 2, LinearVelocity: 0, AngularVelocity: 0}
 		cmdRepo[2] = StandardCommand{RobotID: 3, LinearVelocity: 0, AngularVelocity: 0}
