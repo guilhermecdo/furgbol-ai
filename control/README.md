@@ -7,6 +7,7 @@ The control package contains modules that provide control of the environment, su
 - [Standard Command Type](#stdcmd)
 - [Commands Repository Type](#cmdrepo)
 - [Simulator Command Type](#slrcmd)
+- [Joystick Type](#joystick)
 
 <a name="stdcmd"></a>
 
@@ -36,3 +37,11 @@ This type models the simulator command, having the following fields:
 - *LeftWheelVelocity()*
 - *RightWheelVelocity()*
 - *FinalPosition()*
+
+### Joystick Type
+
+This type implements the command generation interface, providing the method: (*joystick Joystick*) **GetCommands()** (*CommandsRepository, error*).
+To create and initiate a joystick use the methods:
+
+- **NewJoystick**(*joystickID int*)
+- (*joystick *Joystick*) **Init** (*err error*)
