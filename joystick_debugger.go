@@ -1,16 +1,17 @@
-package control
+package main
 
 import (
 	"fmt"
-	"testing"
 	"time"
+
+	"github.com/furgbol/ai/control"
 )
 
-func TestJoystick(t *testing.T) {
-	joystick := NewJoystick(1)
+func main() {
+	joystick := control.NewJoystick(0)
 	err := joystick.Init()
 	if err != nil {
-		t.Errorf("Error on initializing joystick: %v", err)
+		fmt.Printf("Error on initializing joystick: %v", err)
 	} else {
 		running := true
 		ticker := time.NewTicker(time.Minute)
@@ -31,7 +32,7 @@ func TestJoystick(t *testing.T) {
 		for running {
 			cmdRepo, err := joystick.GetCommands()
 			if err != nil {
-				t.Errorf("Error on reading data: %v", err)
+				fmt.Printf("Error on reading data: %v", err)
 				break
 			} else {
 				fmt.Println(cmdRepo)
